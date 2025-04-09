@@ -28,14 +28,20 @@ def app_chat():
     
     nova_mensagem = st.chat_input("Digite sua pergunta aqui")
     if nova_mensagem:
-        
         chat = container.chat_message("human")
-        chat.write(nova_mensagem)
+        chat.markdown(nova_mensagem)
+        
         chat = container.chat_message("ai")
-        chat.write("Pensando...")
-        resultado = chain.invoke({"question": nova_mensagem})
-        chat.empty()
-        chat.write(resultado["answer"])
+        with st.spinner("🧠 Gerando resposta..."):
+            result = chain.invoke({"question": nova_mensagem})
+            chat.markdown(result["answer"])
+            
+            sentimento, emoji, cor = analisar_sentimento(result["answer"])
+            chat.markdown(f"""
+            <div style="margin-top: 10px; padding: 5px 10px; border-radius: 5px; background-color: {cor}25; display: inline-block;">
+                <span style="color: {cor}; font-weight: bold;">Sentimento: {sentimento} {emoji}</span>
+            </div>
+            """, unsafe_allow_html=True)
         
         st.rerun()
 
@@ -52,8 +58,43 @@ def salvar_arquivos(arquivos, pasta):
         caminho = pasta / arquivo.name
         caminho.write_bytes(arquivo.read())
 
-def main():
+def mostrar_progresso_processamento():
+    """Mostra uma barra de progresso personalizada durante o processamento."""
+    progress_bar = st.progress(0)
+    status_text = st.empty()
+    
+    status_text.text("🔍 Carregando documentos...")
+    progress_bar.progress(25)
+    time.sleep(0.7)
+    
+    status_text.text("📄 Processando texto...")
+    progress_bar.progress(50)
+    time.sleep(0.7)
+    
+    status_text.text("🧠 Criando embeddings...")
+    progress_bar.progress(75)
+    time.sleep(0.7)
+    
+    status_text.text("✅ Finalizando...")
+    progress_bar.progress(100)
+    status_text.text("✅ Processamento concluído!")
+    time.sleep(0.5)
 
+def analisar_sentimento(texto):
+    """Analisa o sentimento do texto e retorna uma classificação simples."""
+    from textblob import TextBlob
+    
+    blob = TextBlob(texto)
+    sentimento = blob.sentiment.polarity
+    
+    if sentimento > 0.1:
+        return "Positivo", "😃", "#28a745"  
+    elif sentimento < -0.1:
+        return "Negativo", "😔", "#dc3545"  
+    else:
+        return "Neutro", "😐", "#6c757d"  
+
+def main():
     with st.sidebar:
         st.header("Carregue os PDFs")
         
@@ -76,16 +117,17 @@ def main():
                 st.write(f"- {arquivo.name}")
         
         texto_botao = "Iniciar Chatbot" if "chain" not in st.session_state else "Reiniciar Chatbot"
-        if st.button(texto_botao, use_container_width=True):
+        
+        if st.button(texto_botao, use_container_width=True, type="primary"):
             if len(list(pasta_arquivos.glob("*.pdf"))) == 0:
-                st.error("Você precisa adicionar pelo menos um arquivo PDF!")
+                st.error("Adicione arquivos PDF para inicializar o chatbot")
             else:
-                st.info("Inicializando o chatbot, por favor aguarde...")
-                criar_conversa()
-                st.success("Chatbot pronto!")
+                with st.spinner("⏳ Inicializando..."):
+                    mostrar_progresso_processamento()  
+                    criar_conversa()
+                st.success("✅ Chatbot pronto!")
                 st.rerun()
     
-    # Área principal - chat
     app_chat()
 
 if __name__ == "__main__":
