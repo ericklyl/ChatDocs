@@ -1,9 +1,9 @@
+streamlit
 langchain
 langchain-community
 langchain-openai
-openai
+langchain-text-splitters
 pypdf
-streamlit
 python-dotenv
 faiss-cpu
-
+docx2txt
