@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 from langchain_community.document_loaders.pdf import PyPDFLoader
+from langchain_community.document_loaders import Docx2txtLoader, TextLoader, UnstructuredODTLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_openai.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores.faiss import FAISS
@@ -20,15 +21,51 @@ pasta_arquivos.mkdir(exist_ok=True)
 nome_modelo = "gpt-3.5-turbo-0125"
 
 def importar_documentos():
-    """Função para carregar os documentos PDF"""
+    """Função para carregar documentos PDF, DOCX, TXT e ODT"""
     documentos = []
+
+    # Buscar arquivos PDF
     for arquivo in pasta_arquivos.glob("*.pdf"):
         try:
             loader = PyPDFLoader(str(arquivo))
             docs_arquivo = loader.load()
             documentos.extend(docs_arquivo)
         except Exception as e:
-            st.error(f"Erro ao carregar {arquivo.name}: {e}")
+            st.error(f"Erro ao carregar PDF {arquivo.name}: {e}")
+
+    # Buscar arquivos DOCX
+    for arquivo in pasta_arquivos.glob("*.docx"):
+        try:
+            loader = Docx2txtLoader(str(arquivo))
+            docs_arquivo = loader.load()
+            documentos.extend(docs_arquivo)
+        except Exception as e:
+            st.error(f"Erro ao carregar DOCX {arquivo.name}: {e}")
+
+    # Buscar arquivos ODT
+    for arquivo in pasta_arquivos.glob("*.odt"):
+        try:
+            loader = UnstructuredODTLoader(str(arquivo))
+            docs_arquivo = loader.load()
+            documentos.extend(docs_arquivo)
+        except Exception as e:
+            st.error(f"Erro ao carregar ODT {arquivo.name}: {e}")
+
+    # Buscar arquivos TXT
+    for arquivo in pasta_arquivos.glob("*.txt"):
+        try:
+            loader = TextLoader(str(arquivo), encoding='utf-8')
+            docs_arquivo = loader.load()
+            documentos.extend(docs_arquivo)
+        except Exception as e:
+            # Tentar com encoding latin-1 se utf-8 falhar
+            try:
+                loader = TextLoader(str(arquivo), encoding='latin-1')
+                docs_arquivo = loader.load()
+                documentos.extend(docs_arquivo)
+            except Exception as e2:
+                st.error(f"Erro ao carregar TXT {arquivo.name}: {e2}")
+
     return documentos
 
 def dividir_documentos(documentos):
@@ -38,13 +75,13 @@ def dividir_documentos(documentos):
         chunk_overlap=50,  #sobreposição entre pedaços
         separators=["\n\n", "\n", ".", " ", ""]
     )
-    
+
     documentos_divididos = divisor.split_documents(documentos)
     for i, doc in enumerate(documentos_divididos):
         if "source" in doc.metadata:
             doc.metadata["source"] = Path(doc.metadata["source"]).name
         doc.metadata["id"] = i
-    
+
     return documentos_divididos
 
 def criar_vetores(documentos):
@@ -54,40 +91,40 @@ def criar_vetores(documentos):
         documents=documentos,
         embedding=modelo_embeddings
     )
-    
+
     return vetores
 
 def criar_conversa():
     """Função principal para criar a conversa"""
     st.sidebar.text("Carregando documentos...")
-    
+
     documentos = importar_documentos()
     if not documentos:
         st.error("Nenhum documento encontrado ou carregado!")
         return None
-    
+
     st.sidebar.text("Processando textos...")
     documentos_divididos = dividir_documentos(documentos)
-    
+
     st.sidebar.text("Criando embeddings...")
     vetores = criar_vetores(documentos_divididos)
-    
+
     st.sidebar.text("Configurando modelo...")
     chat = ChatOpenAI(
         model=nome_modelo,
         temperature=0.7  #nivel de criatividade e precisão do modelo
     )
-    
+
     memoria = ConversationBufferMemory(
         return_messages=True,
         memory_key="chat_history",
         output_key="answer"
     )
-    
+
     recuperador = vetores.as_retriever(
         search_kwargs={"k": 3}  #busca 3 documentos mais relevantes
     )
-    
+
     chain_conversa = ConversationalRetrievalChain.from_llm(
         llm=chat,
         memory=memoria,
