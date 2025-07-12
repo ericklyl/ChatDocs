@@ -110,9 +110,7 @@ Siga os passos abaixo para configurar o projeto na sua máquina:
 6.  **Configure sua Chave da API da OpenAI:**
 
       * **O arquivo `.env` contendo a chave da API da OpenAI será fornecido junto com o projeto.**
-      * Certifique-se de que o arquivo `.env` esteja na pasta **raiz do projeto** (`ChatPDF/`).
-      * **NUNCA compartilhe este arquivo `.env` publicamente (ele já está configurado para ser ignorado pelo Git).**
-
+      * Ele sera enviado pro professor a parte pois é perigoso fornecer a chave via github
 -----
 
 ## 5\. Como Executar o Aplicativo
