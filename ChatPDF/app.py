@@ -1,7 +1,7 @@
 import streamlit as st
 import time
 from pathlib import Path
-from backend import criar_conversa, pasta_arquivos
+from backend import criar_conversa, pasta_arquivos 
 
 
 st.set_page_config(page_title="ChatDocuments")
@@ -10,47 +10,41 @@ def app_chat():
 
     st.title("Chat com Documentos - Converse com PDFs, DOCX, TXT e ODT")
 
-    #olha se o chat foi iniciado
     if "chain" not in st.session_state:
         st.error("Você precisa carregar documentos (PDF, DOCX, TXT ou ODT) e inicializar o chatbot primeiro!")
-        st.stop()
+        st.stop() 
 
-    #pega a chain das msgs anteriores
     chain = st.session_state["chain"]
     memory = chain.memory
     mensagens = memory.load_memory_variables({})["chat_history"]
 
     container = st.container()
     for mensagem in mensagens:
-        chat = container.chat_message(mensagem.type)
+        chat = container.chat_message(mensagem.type) # 'human' ou 'ai'
         chat.write(mensagem.content)
 
 
     nova_mensagem = st.chat_input("Digite sua pergunta aqui")
     if nova_mensagem:
+        
         chat = container.chat_message("human")
         chat.markdown(nova_mensagem)
 
         chat = container.chat_message("ai")
-        with st.spinner("🧠 Gerando resposta..."):
+        with st.spinner("🧠 Gerando resposta..."): 
             result = chain.invoke({"question": nova_mensagem})
-            chat.markdown(result["answer"])
+            chat.markdown(result["answer"]) # Exibe a resposta do chatbot
 
-            sentimento, emoji, cor = analisar_sentimento(result["answer"])
-            chat.markdown(f"""
-            <div style="margin-top: 10px; padding: 5px 10px; border-radius: 5px; background-color: {cor}25; display: inline-block;">
-                <span style="color: {cor}; font-weight: bold;">Sentimento: {sentimento} {emoji}</span>
-            </div>
-            """, unsafe_allow_html=True)
+            
 
-        st.rerun()
+        st.rerun() 
 
 def salvar_arquivos(arquivos, pasta):
-    """Função simples para salvar os arquivos enviados"""
-    # cria pasta se não existir
+    """Função para salvar os arquivos enviados pelo usuário na pasta 'arquivos'."""
+    # Cria a pasta se não existir
     pasta.mkdir(exist_ok=True)
 
-    # Remove arquivos antigos de todos os tipos suportados
+    
     for arquivo in pasta.glob("*.pdf"):
         arquivo.unlink()
     for arquivo in pasta.glob("*.docx"):
@@ -60,13 +54,12 @@ def salvar_arquivos(arquivos, pasta):
     for arquivo in pasta.glob("*.odt"):
         arquivo.unlink()
 
-    #salva arquivos
     for arquivo in arquivos:
         caminho = pasta / arquivo.name
         caminho.write_bytes(arquivo.read())
 
 def mostrar_progresso_processamento():
-    """Mostra uma barra de progresso personalizada durante o processamento."""
+    """Mostra uma barra de progresso personalizada durante o processamento inicial do chatbot."""
     progress_bar = st.progress(0)
     status_text = st.empty()
 
@@ -87,37 +80,22 @@ def mostrar_progresso_processamento():
     status_text.text("✅ Processamento concluído!")
     time.sleep(0.5)
 
-def analisar_sentimento(texto):
-    """Analisa o sentimento do texto e retorna uma classificação simples."""
-    from textblob import TextBlob
-
-    blob = TextBlob(texto)
-    sentimento = blob.sentiment.polarity
-
-    if sentimento > 0.1:
-        return "Positivo", "😃", "#28a745"
-    elif sentimento < -0.1:
-        return "Negativo", "😔", "#dc3545"
-    else:
-        return "Neutro", "😐", "#6c757d"
 
 def main():
-    with st.sidebar:
+    """Função principal que organiza a interface do Streamlit."""
+    with st.sidebar: 
         st.header("Carregue os Documentos")
 
-        #upload de múltiplos tipos de documento
         arquivos_documentos = st.file_uploader(
             "Carregue seus arquivos (PDF, DOCX, TXT, ODT)",
             type=["pdf", "docx", "txt", "odt"],
             accept_multiple_files=True
         )
 
-        #salvar arquivos
         if arquivos_documentos:
             salvar_arquivos(arquivos_documentos, pasta_arquivos)
             st.success(f"{len(arquivos_documentos)} arquivos foram enviados!")
 
-        # Mostrar arquivos carregados de todos os tipos
         arquivos_disponiveis = []
         arquivos_disponiveis.extend(list(pasta_arquivos.glob("*.pdf")))
         arquivos_disponiveis.extend(list(pasta_arquivos.glob("*.docx")))
@@ -127,7 +105,6 @@ def main():
         if arquivos_disponiveis:
             st.write("Arquivos carregados:")
             for arquivo in arquivos_disponiveis:
-                # Mostrar ícone baseado no tipo de arquivo
                 if arquivo.suffix.lower() == '.pdf':
                     icone = "📄"
                 elif arquivo.suffix.lower() == '.docx':
@@ -137,23 +114,28 @@ def main():
                 elif arquivo.suffix.lower() == '.odt':
                     icone = "📄"
                 else:
-                    icone = "📋"
+                    icone = "📋" # Ícone padrão
                 st.write(f"{icone} {arquivo.name}")
 
         texto_botao = "Iniciar Chatbot" if "chain" not in st.session_state else "Reiniciar Chatbot"
 
         if st.button(texto_botao, use_container_width=True, type="primary"):
-            total_arquivos = len(list(pasta_arquivos.glob("*.pdf"))) + len(list(pasta_arquivos.glob("*.docx"))) + len(list(pasta_arquivos.glob("*.txt"))) + len(list(pasta_arquivos.glob("*.odt")))
+            total_arquivos = (
+                len(list(pasta_arquivos.glob("*.pdf"))) +
+                len(list(pasta_arquivos.glob("*.docx"))) +
+                len(list(pasta_arquivos.glob("*.txt"))) +
+                len(list(pasta_arquivos.glob("*.odt")))
+            )
             if total_arquivos == 0:
                 st.error("Adicione arquivos (PDF, DOCX, TXT ou ODT) para inicializar o chatbot")
             else:
                 with st.spinner("⏳ Inicializando..."):
-                    mostrar_progresso_processamento()
-                    criar_conversa()
+                    mostrar_progresso_processamento() 
+                    criar_conversa() 
                 st.success("✅ Chatbot pronto!")
-                st.rerun()
+                st.rerun() 
 
-    app_chat()
+    app_chat() 
 
 if __name__ == "__main__":
-    main()
+    main() 
