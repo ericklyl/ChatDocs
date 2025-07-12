@@ -1,208 +1,193 @@
-# ChatDocs: Chat com Documentos (PDF, DOCX, TXT, PPTX)
+# ChatDocs: Chat com Documentos
 
-## 1\. Visão Geral do Projeto
+## 1\. Título do Projeto e Integrantes
 
-O ChatDocs é uma aplicação web interativa desenvolvida com **Streamlit** que permite aos usuários fazerem perguntas sobre o conteúdo de diversos tipos de documentos. Ele utiliza o poder das **Grandes Modelos de Linguagem (LLMs)** da OpenAI, orquestrados pelo framework **LangChain**, para processar documentos PDF, DOCX, TXT e PPTX.
+**Título do Projeto:** ChatDocs: Chat com Documentos
 
-**Funcionalidades Principais:**
+**Integrantes:**
 
-  * **Upload de Documentos:** Carregue arquivos PDF, DOCX, TXT e PPTX diretamente pela interface.
-  * **Processamento de Documentos:** Os documentos são divididos em pedaços menores (chunks) e convertidos em representações numéricas (embeddings).
-  * **Armazenamento Vetorial:** Os embeddings são armazenados em um banco de dados vetorial FAISS para busca rápida de informações relevantes.
-  * **Chat Inteligente:** Converse com seus documentos, fazendo perguntas e obtendo respostas baseadas no conteúdo carregado.
-  * **Memória Conversacional:** O chatbot mantém o contexto da conversa, permitindo diálogos mais fluidos e coerentes.
+  * Erick Loyola
+  * Lara Aguilar
+  * Renzo Avance
+  * Rodolfo Oliveira
 
------
-
-## 2\. Tecnologias Utilizadas
-
-Este projeto foi desenvolvido em Python e faz uso das seguintes bibliotecas e ferramentas:
-
-  * **Python 3.11.9** (versão utilizada no desenvolvimento e recomendada)
-  * **Streamlit**: Para a interface web interativa.
-  * **LangChain**: Framework essencial para construção de aplicações com LLMs.
-  * **OpenAI API**: Fornece os modelos de linguagem (GPT-3.5-turbo-0125) e de embeddings.
-  * **FAISS**: Para armazenamento e busca eficiente de vetores de documentos.
-  * **python-dotenv**: Para o gerenciamento seguro das chaves de API via arquivo `.env`.
-  * **pypdf**: Para o carregamento de arquivos PDF.
-  * **docx2txt**: Para o carregamento de arquivos DOCX.
-  * **python-pptx**: Para o carregamento de arquivos PPTX.
 
 -----
 
-## 3\. Estrutura do Projeto
+## 2\. Objetivo Geral do Sistema
 
-A estrutura de diretórios do projeto é a seguinte:
+O ChatDocs é uma aplicação web interativa desenvolvida para facilitar a interação com o conteúdo de diversos tipos de documentos. Seu objetivo principal é permitir que os usuários façam perguntas em linguagem natural e recebam respostas precisas e contextualizadas, extraídas diretamente de seus próprios arquivos. Isso é alcançado através da integração de Modelos de Linguagem de Grande Escala (LLMs) com um sistema de recuperação de informações baseado em embeddings, transformando coleções de documentos em uma base de conhecimento conversacional.
 
+
+-----
+
+## 3\. Tecnologias e Bibliotecas Utilizadas
+
+Este projeto foi desenvolvido em **Python 3.11.9** e faz uso das seguintes bibliotecas e ferramentas:
+
+  * **Streamlit**: Framework de código aberto para a criação rápida de interfaces web interativas em Python. Utilizado para construir a interface de usuário do chatbot.
+  * **LangChain**: Framework flexível para o desenvolvimento de aplicações alimentadas por LLMs. Essencial para orquestrar o pipeline do chatbot, incluindo o carregamento de documentos, divisão de texto, criação de embeddings, gerenciamento de memória e interação com o LLM.
+  * **OpenAI API**: Interface de programação de aplicações da OpenAI, utilizada para:
+      * **Modelos de Linguagem (LLM):** `gpt-3.5-turbo-0125` para gerar as respostas do chatbot.
+      * **Modelos de Embeddings:** `OpenAIEmbeddings` para converter texto em vetores numéricos.
+  * **FAISS**: (Facebook AI Similarity Search) Uma biblioteca para busca eficiente de similaridade. Utilizada como banco de dados vetorial em memória para armazenar os embeddings dos documentos e permitir a recuperação rápida de trechos relevantes.
+  * **python-dotenv**: Para o gerenciamento seguro das variáveis de ambiente (como a chave da API da OpenAI) carregando-as de um arquivo `.env`.
+  * **pypdf**: Biblioteca Python para trabalhar com arquivos PDF, utilizada para extrair texto de documentos PDF.
+  * **docx2txt**: Biblioteca Python para extrair texto de arquivos Microsoft Word (`.docx`).
+  * **python-pptx**: Biblioteca Python para ler e manipular arquivos Microsoft PowerPoint (`.pptx`), utilizada para extrair o texto dos slides.
+
+
+
+-----
+
+## 4\. Requisitos para Execução
+
+Para executar o projeto ChatDocs, você precisará do seguinte ambiente:
+
+  * **Python 3.11.x**: Recomenda-se a versão **Python 3.11.9**.
+      * Verifique sua versão com: `python --version`
+      * Baixe e instale o Python em: [python.org](https://www.python.org/downloads/)
+  * **Git**: Recomendado para clonar o repositório.
+      * Verifique sua instalação com: `git --version`
+      * Baixe e instale em: [git-scm.com](https://git-scm.com/downloads)
+  * **Chave da API da OpenAI**: O projeto requer uma chave válida da API da OpenAI.
+      * Obtenha em: [platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys)
+
+
+-----
+
+## 5\. Instruções Passo a Passo para Instalação e Execução
+
+Siga cuidadosamente estas instruções para configurar e rodar o projeto ChatDocs em sua máquina:
+
+### 5.1. Clonar o Repositório
+
+Abra seu terminal (PowerShell, CMD, Git Bash) e clone o repositório do GitHub:
+
+```bash
+git clone https://github.com/ericklyl/ChatDocs.git
 ```
-ChatDocs-main/
-└── ChatPDF/             # Esta é a pasta raiz do projeto após clonar/descompactar
-    ├── arquivos/               # Pasta para armazenar os documentos carregados pelo usuário.
-    │   └── (documentos .pdf, .docx, .txt, .pptx)
-    ├── venv/                   # Ambiente virtual Python (IGNORADO PELO GIT)
-    ├── .env                    # Arquivo para variáveis de ambiente (será fornecido)
-    ├── app.py                  # Script principal da interface do usuário Streamlit.
-    ├── backend.py              # Lógica de processamento de documentos e do chatbot.
-    ├── requirements.txt        # Lista de dependências Python do projeto.
-    └── README.md               # Documentação do projeto (este arquivo).
+
+Isso criará uma pasta chamada `ChatDocs`.
+
+### 5.2. Navegar para a Pasta Raiz do Projeto
+
+Entre na pasta `ChatDocs` que contém o subdiretório `ChatPDF`. Em seguida, entre na pasta `ChatPDF`. **É crucial que todos os comandos seguintes sejam executados DENTRO desta pasta `ChatPDF`**.
+
+```bash
+cd ChatDocs
+cd ChatPDF
 ```
 
------
+Seu prompt de comando deve agora indicar que você está no diretório `ChatPDF`, por exemplo: `C:\Users\SeuUsuario\Downloads\ChatDocs\ChatPDF>`
 
-## 4\. Configuração do Ambiente
+### 5.3. Criar o Ambiente Virtual
 
-Siga os passos abaixo para configurar o projeto na sua máquina:
+Dentro da pasta `ChatPDF` (confirme seu prompt\!), crie um ambiente virtual para isolar as dependências:
 
-### 4.1. Pré-requisitos
+```bash
+python -m venv venv
+```
 
-  * **Python 3.11.x**: Certifique-se de ter o Python 3.11.9 (ou uma versão 3.11.x compatível) instalada. Você pode baixar em [python.org](https://www.python.org/downloads/).
-  * **Git**: Para clonar o repositório (opcional, mas recomendado). Baixe em [git-scm.com](https://git-scm.com/downloads).
+Isso criará uma nova pasta `venv` dentro de `ChatPDF`.
 
-### 4.2. Configuração do Projeto
+### 5.4. Ativar o Ambiente Virtual
 
-1.  **Clone o Repositório:**
+Ainda dentro da pasta `ChatPDF`, ative o ambiente virtual.
 
-    ```bash
-    git clone https://github.com/ericklyl/ChatDocs.git
-    cd ChatDocs
-    ```
+  * **No Windows PowerShell/CMD:**
 
-    *Se você baixou um ZIP, descompacte-o e abra o terminal na pasta raiz do projeto (`ChatDocs-main/ChatPDF/`).*
-
-2.  **Navegue até a pasta `ChatPDF` (Pasta Raiz do Projeto):**
-    É **essencial** que todos os comandos seguintes sejam executados **dentro da pasta `ChatPDF`**.
-
-    ```bash
-    cd ChatPDF
-    ```
-
-    Sua linha de comando deve indicar que você está neste diretório, por exemplo: `C:\Caminho\Para\ChatDocs-main\ChatPDF>`
-
-3.  **Crie um Ambiente Virtual:**
-    É **fundamental** usar um ambiente virtual para isolar as dependências do projeto e evitar conflitos. Certifique-se de estar na pasta `ChatPDF` antes de executar este comando.
-
-    ```bash
-    python -m venv venv
-    ```
-
-4.  **Ative o Ambiente Virtual:**
-
-      * Certifique-se de estar dentro da pasta `ChatPDF`.
-      * No **Windows PowerShell/CMD**:
-        ```bash
-        .\venv\Scripts\activate
-        ```
-      * No **Linux/macOS**:
-        ```bash
-        source venv/bin/activate
-        ```
-      * Você verá `(venv)` no início da linha do seu terminal, indicando que o ambiente está ativo. **Este é um passo CRÍTICO e deve ser feito sempre antes de instalar ou rodar o projeto.**
-
-5.  **Instale as Dependências Python:**
-    Com o ambiente virtual **ativo** e ainda na pasta `ChatPDF`, instale todas as bibliotecas listadas no `requirements.txt`.
-
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-    **ATENÇÃO:** Monitore o terminal para quaisquer mensagens de erro durante a instalação.
-
-6.  **Configure sua Chave da API da OpenAI:**
-
-      * **O arquivo `.env` contendo a chave da API da OpenAI será fornecido junto com o projeto.**
-      * Ele sera enviado pro professor a parte pois é perigoso fornecer a chave via github
------
-
-## 5\. Como Executar o Aplicativo
-
-Após configurar o ambiente e instalar todas as dependências:
-
-1.  **Abra seu terminal** (PowerShell, CMD, ou Git Bash).
-2.  **Navegue até a pasta `ChatPDF`** (a pasta raiz do seu projeto):
-    ```bash
-    cd C:\Users\SeuUsuario\Downloads\ChatDocs-main\ChatPDF # Exemplo de caminho
-    ```
-3.  **Ative o Ambiente Virtual:**
     ```bash
     .\venv\Scripts\activate
     ```
-    Você deve ver `(venv)` no prompt.
-4.  **Adicione seus Documentos:** Coloque seus arquivos (PDF, DOCX, TXT, PPTX) na pasta `ChatPDF/arquivos/`. Você também pode carregá-los pela interface do Streamlit.
-5.  **Execute o Aplicativo Streamlit:**
+
+  * **No Linux/macOS:**
+
     ```bash
-    streamlit run app.py
+    source venv/bin/activate
     ```
-    O aplicativo abrirá automaticamente no seu navegador web (geralmente em `http://localhost:8501`).
+
+Você deve ver `(venv)` no início da linha do seu terminal. Isso significa que o ambiente está ativo e todos os `pip install` e `streamlit run` serão executados dentro dele.
+
+### 5.5. Instalar as Dependências Python
+
+Com o ambiente virtual **ativo** (`(venv)` no prompt\!), instale todas as bibliotecas listadas no `requirements.txt`:
+
+```bash
+pip install -r requirements.txt
+```
+
+**Monitorar a Saída:** Observe atentamente o terminal durante este processo. Se houver mensagens de `ERROR:` ou `Failed building wheel for...`, isso indica que alguma dependência não foi instalada corretamente.
+
+### 5.6. Configurar a Chave da API da OpenAI
+
+1.  O arquivo `.env` (que contém a chave da API da OpenAI) **será fornecido junto com o projeto**. Certifique-se de que ele esteja na pasta **`ChatPDF/`** (a pasta raiz do seu projeto).
+2.  **Verifique o conteúdo do `.env`:** Abra-o com um editor de texto simples (como Bloco de Notas). Ele deve conter sua chave da API no formato:
+    ```
+    OPENAI_API_KEY="SUA_CHAVE_DA_API_DA_OPENAI_AQUI"
+    ```
+    Substitua `"SUA_CHAVE_DA_API_DA_OPENAI_AQUI"` pela chave real, que começa com `sk-`.
+3. Quando voce baixar o arquivo.env, pode ser que ele venha sem o "." antes do env, renomeie ele para colocar o ponto e ficar como ".env"
+
+### 5.7. Adicionar Documentos
+
+Use a pasta chamada `files` dentro de `ChatPDF/` se ela ainda não existir. Coloque seus arquivos PDF, DOCX, TXT e PPTX com os quais deseja conversar dentro desta pasta `ChatPDF/arquivos/`. Alternativamente, você poderá fazer o upload pela própria interface do Streamlit.
+
+### 5.8. Executar o Aplicativo
+
+Com o ambiente virtual **ativo** e na pasta `ChatPDF/`, execute o Streamlit:
+
+```bash
+streamlit run app.py
+```
+
+O aplicativo será aberto automaticamente no seu navegador web (geralmente em `http://localhost:8501`).
+
+
 
 -----
 
-## 6\. Solução de Problemas Comuns (e o que enfrentamos\!)
+## 6\. Demonstração das Principais Funcionalidades
 
-Esta seção lista os erros mais frequentes que podem ocorrer durante a configuração ou execução, e suas soluções, baseadas nos desafios que encontramos durante o desenvolvimento.
+### 6.1. Interface de Carregamento e Inicialização
 
-### 6.1. Erro: `'streamlit' não é reconhecido` ou `'activate' não é reconhecido`
+Ao abrir o aplicativo, você verá a interface principal do chat e uma barra lateral para carregar documentos.
 
-```
-'streamlit' não é reconhecido como nome de cmdlet...
-.\venv\Scripts\activate : O termo '.\venv\Scripts\activate' não é reconhecido...
-```
+1.  **Carregar Documentos:** Use o "Carregue seus arquivos (PDF, DOCX, TXT, PPTX)" para fazer upload. Os arquivos serão salvos na pasta `arquivos/`.
+2.  **Arquivos Carregados:** A lista abaixo do uploader mostrará os documentos detectados na pasta `arquivos/`.
+3.  **Iniciar Chatbot:** Clique no botão "Iniciar Chatbot" para processar os documentos. Uma barra de progresso indicará o status.
 
-  * **Causa:** O ambiente virtual não está ativado, ou as bibliotecas não foram instaladas nele.
-  * **Solução:**
-    1.  Certifique-se de que você está no diretório correto (`ChatPDF/`).
-    2.  Verifique se `(venv)` aparece no seu prompt. Se não, ative o ambiente virtual usando `.\venv\Scripts\activate`.
-    3.  Se a ativação falhar, prossiga para a Seção 6.2 (Problemas de Política de Execução).
-    4.  Com o `venv` ativo, execute `pip install -r requirements.txt` novamente para garantir que todas as dependências foram instaladas.
+### 6.2. Interagindo com o Chatbot
 
------
+Após a inicialização bem-sucedida, a interface do chat estará pronta.
 
-### 6.2. Erro: `A execução de scripts foi desabilitada neste sistema` (PowerShell)
+1.  **Histórico da Conversa:** As suas perguntas e as respostas do chatbot aparecerão aqui.
+2.  **Campo de Pergunta:** Digite sua pergunta sobre o conteúdo dos documentos no campo "Digite sua pergunta aqui".
+3.  **Respostas:** O chatbot gerará uma resposta baseada nos documentos e no histórico da conversa.
 
-```
-.\venv\Scripts\activate : O arquivo [...]Activate.ps1 não pode ser carregado porque a execução de scripts foi desabilitada neste sistema.
-```
+**Exemplo de uso:**
 
-  * **Causa:** O PowerShell, por padrão, impede a execução de scripts locais por segurança.
-  * **Solução:**
-    1.  **Abra o PowerShell como Administrador:** Clique com o botão direito no menu Iniciar \> "Windows PowerShell (Admin)".
-    2.  Execute o comando: `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser`
-    3.  Digite `S` e pressione Enter para confirmar.
-    4.  **Feche o PowerShell de Administrador** e abra um **novo PowerShell normal**. Tente ativar o ambiente virtual novamente.
+  * **Pergunta:** "O que é o projeto artemis?"
+  * **Resposta:** Uma resposta contextualizada baseada nos documentos fornecidos será exibida.
+
+
 
 -----
 
-### 6.3. Erro: `openai.OpenAIError: The api_key client option must be set`
+## 7\. Possíveis Limitações e Sugestões de Melhorias Futuras
 
-```
-openai.OpenAIError: The api_key client option must be set either by passing api_key to the client or by setting the OPENAI_API_KEY environment variable
-```
+### 7.1. Limitações Atuais
 
-  * **Causa:** O aplicativo não consegue encontrar sua chave da API da OpenAI.
-  * **Solução:**
-    1.  Verifique se o arquivo `.env` está na pasta **raiz do projeto** (`ChatPDF/`).
-    2.  Confirme que o `.env` contém a linha `OPENAI_API_KEY="SUA_CHAVE_DA_API_DA_OPENAI_AQUI"` com uma chave válida.
-    3.  **Reinicie o aplicativo Streamlit** (pare com `Ctrl + C` e rode `streamlit run app.py` novamente) após qualquer alteração.
+  * ** Dependência da qualidade do documentode entrada
+  * ** Custo associado ao uso de LLM sem larga escala
+  * ** Possível latência na geração de respostas
+  * ** Questões de privacidade e segurança com dados sensíveis
 
------
 
-### 6.4. Erro: `ModuleNotFoundError: No module named 'textblob'`
+### 7.2. Sugestões de Melhorias Futuras
 
-  * **Causa:** A biblioteca `textblob` está faltando, ou o código de análise de sentimento não foi completamente removido.
-  * **Solução:**
-    1.  Certifique-se de que o código de análise de sentimento foi **removido completamente** do `app.py` (verifique visualmente).
-    2.  **Remova `textblob` do `requirements.txt`** se ainda estiver lá.
-    3.  No terminal (com `venv` ativo): `pip uninstall textblob` (se estiver instalado) e depois `pip install -r requirements.txt`.
-
------
-
-### 6.5. Erro: `ModuleNotFoundError: No module named 'docx2txt'` ou `ModuleNotFoundError: No module named 'pptx'` (ou outros loaders)
-
-  * **Causa:** As bibliotecas `docx2txt` ou `python-pptx` (ou suas dependências) não estão instaladas corretamente.
-  * **Solução:**
-    1.  **Ative o ambiente virtual** (`.\venv\Scripts\activate`).
-    2.  **Reinstale especificamente a biblioteca faltante:**
-          * Para `docx2txt`: `pip install docx2txt --force-reinstall`
-          * Para `python-pptx`: `pip install python-pptx --force-reinstall`
-    3.  Verifique se a instalação foi bem-sucedida usando `pip show [nome_da_biblioteca]`.
+  * ** Suporte a Múltiplos Formatos (Expandirpara XLSX, HTML, XML)
+  * ** Interface Conversacional Aprimorada (Incorporar histórico e memória de longo prazo)
+  * **  Otimizaçãode Desempenho (Técnicas avançadas de retrieval)
 
 -----
