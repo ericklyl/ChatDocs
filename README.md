@@ -1,7 +1,3 @@
-Com certeza\! Aqui está o `README.md` completo em formato Markdown, pronto para o seu professor. Ele incorpora todas as últimas mudanças no código, as soluções para os problemas enfrentados, e está adaptado para o seu repositório.
-
------
-
 # ChatDocs: Chat com Documentos (PDF, DOCX, TXT, PPTX)
 
 ## 1\. Visão Geral do Projeto
@@ -39,15 +35,16 @@ Este projeto foi desenvolvido em Python e faz uso das seguintes bibliotecas e fe
 A estrutura de diretórios do projeto é a seguinte:
 
 ```
-ChatDocs/  # Esta é a pasta raiz do projeto após clonar/descompactar
-├── arquivos/               # Pasta para armazenar os documentos carregados pelo usuário.
-│   └── (documentos .pdf, .docx, .txt, .pptx)
-├── venv/                   # Ambiente virtual Python (IGNORADO PELO GIT)
-├── .env                    # Arquivo para variáveis de ambiente (será fornecido)
-├── app.py                  # Script principal da interface do usuário Streamlit.
-├── backend.py              # Lógica de processamento de documentos e do chatbot.
-├── requirements.txt        # Lista de dependências Python do projeto.
-└── README.md               # Documentação do projeto (este arquivo).
+ChatDocs-main/
+└── ChatPDF/             # Esta é a pasta raiz do projeto após clonar/descompactar
+    ├── arquivos/               # Pasta para armazenar os documentos carregados pelo usuário.
+    │   └── (documentos .pdf, .docx, .txt, .pptx)
+    ├── venv/                   # Ambiente virtual Python (IGNORADO PELO GIT)
+    ├── .env                    # Arquivo para variáveis de ambiente (será fornecido)
+    ├── app.py                  # Script principal da interface do usuário Streamlit.
+    ├── backend.py              # Lógica de processamento de documentos e do chatbot.
+    ├── requirements.txt        # Lista de dependências Python do projeto.
+    └── README.md               # Documentação do projeto (este arquivo).
 ```
 
 -----
@@ -70,17 +67,27 @@ Siga os passos abaixo para configurar o projeto na sua máquina:
     cd ChatDocs
     ```
 
-    *Se você baixou um ZIP, descompacte-o e abra o terminal na pasta raiz do projeto (`ChatDocs/`).*
+    *Se você baixou um ZIP, descompacte-o e abra o terminal na pasta raiz do projeto (`ChatDocs-main/ChatPDF/`).*
 
-2.  **Crie um Ambiente Virtual:**
-    É **fundamental** usar um ambiente virtual para isolar as dependências do projeto e evitar conflitos.
+2.  **Navegue até a pasta `ChatPDF` (Pasta Raiz do Projeto):**
+    É **essencial** que todos os comandos seguintes sejam executados **dentro da pasta `ChatPDF`**.
+
+    ```bash
+    cd ChatPDF
+    ```
+
+    Sua linha de comando deve indicar que você está neste diretório, por exemplo: `C:\Caminho\Para\ChatDocs-main\ChatPDF>`
+
+3.  **Crie um Ambiente Virtual:**
+    É **fundamental** usar um ambiente virtual para isolar as dependências do projeto e evitar conflitos. Certifique-se de estar na pasta `ChatPDF` antes de executar este comando.
 
     ```bash
     python -m venv venv
     ```
 
-3.  **Ative o Ambiente Virtual:**
+4.  **Ative o Ambiente Virtual:**
 
+      * Certifique-se de estar dentro da pasta `ChatPDF`.
       * No **Windows PowerShell/CMD**:
         ```bash
         .\venv\Scripts\activate
@@ -91,8 +98,8 @@ Siga os passos abaixo para configurar o projeto na sua máquina:
         ```
       * Você verá `(venv)` no início da linha do seu terminal, indicando que o ambiente está ativo. **Este é um passo CRÍTICO e deve ser feito sempre antes de instalar ou rodar o projeto.**
 
-4.  **Instale as Dependências Python:**
-    Com o ambiente virtual **ativo**, instale todas as bibliotecas listadas no `requirements.txt`.
+5.  **Instale as Dependências Python:**
+    Com o ambiente virtual **ativo** e ainda na pasta `ChatPDF`, instale todas as bibliotecas listadas no `requirements.txt`.
 
     ```bash
     pip install -r requirements.txt
@@ -100,10 +107,10 @@ Siga os passos abaixo para configurar o projeto na sua máquina:
 
     **ATENÇÃO:** Monitore o terminal para quaisquer mensagens de erro durante a instalação.
 
-5.  **Configure sua Chave da API da OpenAI:**
+6.  **Configure sua Chave da API da OpenAI:**
 
       * **O arquivo `.env` contendo a chave da API da OpenAI será fornecido junto com o projeto.**
-      * Certifique-se de que o arquivo `.env` esteja na pasta **raiz do projeto** (`ChatDocs/`).
+      * Certifique-se de que o arquivo `.env` esteja na pasta **raiz do projeto** (`ChatPDF/`).
       * **NUNCA compartilhe este arquivo `.env` publicamente (ele já está configurado para ser ignorado pelo Git).**
 
 -----
@@ -113,16 +120,16 @@ Siga os passos abaixo para configurar o projeto na sua máquina:
 Após configurar o ambiente e instalar todas as dependências:
 
 1.  **Abra seu terminal** (PowerShell, CMD, ou Git Bash).
-2.  **Navegue até a pasta raiz do projeto** (`ChatDocs/`):
+2.  **Navegue até a pasta `ChatPDF`** (a pasta raiz do seu projeto):
     ```bash
-    cd C:\Users\SeuUsuario\Downloads\ChatDocs # Exemplo de caminho onde o projeto foi descompactado/clonado
+    cd C:\Users\SeuUsuario\Downloads\ChatDocs-main\ChatPDF # Exemplo de caminho
     ```
 3.  **Ative o Ambiente Virtual:**
     ```bash
     .\venv\Scripts\activate
     ```
     Você deve ver `(venv)` no prompt.
-4.  **Adicione seus Documentos:** Coloque seus arquivos (PDF, DOCX, TXT, PPTX) na pasta `ChatDocs/arquivos/`. Você também pode carregá-los pela interface do Streamlit.
+4.  **Adicione seus Documentos:** Coloque seus arquivos (PDF, DOCX, TXT, PPTX) na pasta `ChatPDF/arquivos/`. Você também pode carregá-los pela interface do Streamlit.
 5.  **Execute o Aplicativo Streamlit:**
     ```bash
     streamlit run app.py
@@ -144,7 +151,7 @@ Esta seção lista os erros mais frequentes que podem ocorrer durante a configur
 
   * **Causa:** O ambiente virtual não está ativado, ou as bibliotecas não foram instaladas nele.
   * **Solução:**
-    1.  Certifique-se de que você está no diretório correto (`ChatDocs/`).
+    1.  Certifique-se de que você está no diretório correto (`ChatPDF/`).
     2.  Verifique se `(venv)` aparece no seu prompt. Se não, ative o ambiente virtual usando `.\venv\Scripts\activate`.
     3.  Se a ativação falhar, prossiga para a Seção 6.2 (Problemas de Política de Execução).
     4.  Com o `venv` ativo, execute `pip install -r requirements.txt` novamente para garantir que todas as dependências foram instaladas.
@@ -174,7 +181,7 @@ openai.OpenAIError: The api_key client option must be set either by passing api_
 
   * **Causa:** O aplicativo não consegue encontrar sua chave da API da OpenAI.
   * **Solução:**
-    1.  Verifique se o arquivo `.env` está na pasta **raiz do projeto** (`ChatDocs/`).
+    1.  Verifique se o arquivo `.env` está na pasta **raiz do projeto** (`ChatPDF/`).
     2.  Confirme que o `.env` contém a linha `OPENAI_API_KEY="SUA_CHAVE_DA_API_DA_OPENAI_AQUI"` com uma chave válida.
     3.  **Reinicie o aplicativo Streamlit** (pare com `Ctrl + C` e rode `streamlit run app.py` novamente) após qualquer alteração.
 
