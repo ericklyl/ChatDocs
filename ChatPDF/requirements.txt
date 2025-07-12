@@ -7,3 +7,4 @@ pypdf
 python-dotenv
 faiss-cpu
 docx2txt
+python-pptx
