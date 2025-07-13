@@ -131,7 +131,7 @@ pip install -r requirements.txt
 
 ### 5.7. Adicionar Documentos
 
-Use a pasta chamada `files` dentro de `ChatPDF/` se ela ainda não existir. Coloque seus arquivos PDF, DOCX, TXT e PPTX com os quais deseja conversar dentro desta pasta `ChatPDF/arquivos/`. Alternativamente, você poderá fazer o upload pela própria interface do Streamlit.
+Use a pasta chamada `files` dentro de `ChatPDF/` se ela ainda não existir. Coloque seus arquivos PDF, DOCX, TXT e PPTX com os quais deseja conversar dentro desta pasta `ChatPDF/files/`. Alternativamente, você poderá fazer o upload pela própria interface do Streamlit.
 
 ### 5.8. Executar o Aplicativo
 
