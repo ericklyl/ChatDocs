@@ -153,8 +153,8 @@ O aplicativo será aberto automaticamente no seu navegador web (geralmente em `h
 
 Ao abrir o aplicativo, você verá a interface principal do chat e uma barra lateral para carregar documentos.
 
-1.  **Carregar Documentos:** Use o "Carregue seus arquivos (PDF, DOCX, TXT, PPTX)" para fazer upload. Os arquivos serão salvos na pasta `arquivos/`.
-2.  **Arquivos Carregados:** A lista abaixo do uploader mostrará os documentos detectados na pasta `arquivos/`.
+1.  **Carregar Documentos:** Use o "Carregue seus arquivos (PDF, DOCX, TXT, PPTX)" para fazer upload. Os arquivos serão salvos na pasta `files/`.
+2.  **Arquivos Carregados:** A lista abaixo do uploader mostrará os documentos detectados na pasta `files/`.
 3.  **Iniciar Chatbot:** Clique no botão "Iniciar Chatbot" para processar os documentos. Uma barra de progresso indicará o status.
 
 ### 6.2. Interagindo com o Chatbot
