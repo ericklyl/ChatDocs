@@ -188,6 +188,6 @@ Após a inicialização bem-sucedida, a interface do chat estará pronta.
 
   * ** Suporte a Múltiplos Formatos (Expandirpara XLSX, HTML, XML)
   * ** Interface Conversacional Aprimorada (Incorporar histórico e memória de longo prazo)
-  * **  Otimizaçãode Desempenho (Técnicas avançadas de retrieval)
+  * **  Otimização de Desempenho (Técnicas avançadas de retrieval)
 
 -----
